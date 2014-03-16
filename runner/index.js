@@ -101,7 +101,7 @@ Grunt.prototype.run = function (request) {
   var commands = this.parseCommands(request);
   var taskList = this.buildTasks(commands);
   var runner = this.buildRunner(taskList);
-  runner.runParallel(commands, function (err, stats) {
+  runner.run(runner.parallel(commands), function (err, stats) {
     // TODO: we're done, do something meaningful with err and stats
   });
 };

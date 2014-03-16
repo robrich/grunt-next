@@ -36,7 +36,7 @@ Runner.prototype.nospawn = function (request, options, cb) {
   var commands = grunt.parseCommands(request);
   var taskList = grunt.buildTasks(commands);
   runner = grunt.buildRunner(taskList);
-  runner.runParallel(commands, cb);
+  runner.run(runner.parallel(commands), cb);
 };
 
 Runner.prototype.spawn = function (request, options, cb) {
