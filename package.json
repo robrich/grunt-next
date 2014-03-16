@@ -35,7 +35,7 @@
     "liftoff": "~0.9.3",
     "lodash": "~2.4.1",
     "pretty-hrtime": "~0.2.0",
-    "orchestrator": "~0.3.3",
+    "orchestrator": "git://github.com/robrich/orchestrator#develop",
     "chalk": "~0.4.0",
     "glob": "~3.2.8",
     "bluebird": "~1.0.4",

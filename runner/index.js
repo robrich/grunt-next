@@ -80,15 +80,18 @@ Grunt.prototype.buildRunner = function (taskList) {
   // build an orchestration
   var runner = new Orchestrator();
   taskList.forEach(function (task) {
-    runner.add(task.name, task.method);
+    runner.task(task.name, task.method);
   });
 
   // emit some stuff (the next v of orchestrator uses ee2)
-  runner.on('task_start', function (e) {
-    this.emit('task_start', e);
+  runner.on('taskStart', function (e) {
+    this.emit('taskStart', e);
   }.bind(this));
-  runner.on('task_stop', function (e) {
-    this.emit('task_stop', e);
+  runner.on('taskStop', function (e) {
+    this.emit('taskStop', e);
+  }.bind(this));
+  runner.on('taskErr', function (e) {
+    this.emit('taskErr', e);
   }.bind(this));
 
   return runner;
@@ -98,7 +101,9 @@ Grunt.prototype.run = function (request) {
   var commands = this.parseCommands(request);
   var taskList = this.buildTasks(commands);
   var runner = this.buildRunner(taskList);
-  runner.start(commands);
+  runner.runParallel(commands, function (err, stats) {
+    // TODO: we're done, do something meaningful with err and stats
+  });
 };
 
 module.exports = Grunt;

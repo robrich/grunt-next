@@ -1,7 +1,5 @@
 const inherits = require('util').inherits;
 const EE = require('events').EventEmitter;
-const spawn = require('child_process').spawn;
-const Orchestrator = require('orchestrator');
 
 function Runner (grunt) {
   if (!(this instanceof Runner)) { return new Runner(grunt); }
@@ -38,7 +36,7 @@ Runner.prototype.nospawn = function (request, options, cb) {
   var commands = grunt.parseCommands(request);
   var taskList = grunt.buildTasks(commands);
   runner = grunt.buildRunner(taskList);
-  runner.start(commands, cb);
+  runner.runParallel(commands, cb);
 };
 
 Runner.prototype.spawn = function (request, options, cb) {
@@ -62,7 +60,7 @@ Runner.prototype.interrupt = function (cb) {
   this.spawner = null;
   this.emit('interrupt');
   if (this.runner) {
-    this.runner.stop();
+    // FRAGILE: we can't interupt async.auto
     cb();
   } else if (this.spawner) {
     this.spawner.on('close', cb);

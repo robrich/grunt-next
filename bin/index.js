@@ -13,7 +13,7 @@ const cli = new Liftoff({
   processTitle: 'grunt-next',
   cwdFlag: 'base',
   searchHome: true
-})
+});
 
 cli.on('require', function (name, module) {
   if (name === 'coffee-script') {
@@ -61,7 +61,7 @@ function handler (env) {
 
   require(env.configPath)(grunt);
   grunt.run(commands);
-};
+}
 
 function formatError (e) {
   if (!e.err) return e.message;
@@ -71,17 +71,15 @@ function formatError (e) {
 
 function logEvents (emitter) {
 
-  emitter.on('task_start', function (e) {
-    console.log('Running', "'"+chalk.cyan(e.task)+"'...");
+  emitter.on('taskStart', function (e) {
+    console.log('Running', "'"+chalk.cyan(e.name)+"'...");
   });
-  emitter.on('task_stop', function (e) {
+  emitter.on('taskEnd', function (e) {
     var time = prettyTime(e.hrDuration);
-    console.log('Finished', "'"+chalk.cyan(e.task)+"'", 'in', chalk.magenta(time));
+    console.log('Finished', "'"+chalk.cyan(e.name)+"'", 'in', chalk.magenta(time));
   });
-  emitter.on('task_not_found', function (err) {
-    console.log(chalk.red("Task '"+err.task+"' was not defined in your Gruntfile but you tried to run it."));
-    console.log('Please check the documentation for proper Gruntfile formatting.');
-    process.exit(1);
+  emitter.on('taskErr', function (e) {
+    console.log('Errored', "'"+chalk.cyan(e.name)+"'", formatError(e));
   });
 
-};
+}
